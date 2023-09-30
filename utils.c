@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:23:18 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/09/25 17:59:52 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/09/29 22:11:12 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,11 @@ void	*ft_calloc(size_t count, size_t size)
 	char	*ptr;
 	size_t	i;
 
-	i = 0;
+	i = -1;
 	ptr = malloc(count * size);
 	if (!ptr)
 		return (NULL);
-	while (i < count * size)
-	{
+	while (i++ < count * size)
 		ptr[i] = 0;
-		i++;
-	}
 	return (ptr);
 }
