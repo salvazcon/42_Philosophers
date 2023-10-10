@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/04 11:58:34 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/10 19:28:53 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int	ft_check_args(int argc, char **argv)
 	while (argv[i])
 	{
 		j = 0;
-		if(argv[i][j] == '+')
-			i++;
 		while (argv[i][j])
 		{
 			if (!ft_isdigit(argv[i][j]) || argv[i][0] == '0')
@@ -36,7 +34,7 @@ int	ft_check_args(int argc, char **argv)
 	return (0);
 }
 
-t_data	ft_data(int argc, char **argv)
+t_data	ft_data(int argc, char **argv) //tengo que mejorar el control de errores
 {
 	t_data	dt;
 
@@ -44,12 +42,19 @@ t_data	ft_data(int argc, char **argv)
 	dt.t_die = ft_atoi(argv[2]);
 	dt.t_eat = ft_atoi(argv[3]);
 	dt.t_sleep = ft_atoi(argv[4]);
+	if (dt.num_philo <= 0 || dt.t_die <= 0 || dt.t_eat <= 0 || dt.t_sleep <= 0)
+		exit(1);	//ft_free
 	if (argc == 6)
+	{
 		dt.must_eat = ft_atoi(argv[5]);
+		if(dt.must_eat <= 0)
+			exit(1);	//ft_free
+	}
 	else
 		dt.must_eat = -1;	//no existe el argv
-	dt.num_exec = 0;
-	dt.smell_dead = 0;				//false
+	pthread_mutex_init(&dt.mutex, NULL);
+	dt.smell_dead = 0;		//false o true
+	dt.time = in_time();
 	return	(dt);
 }
 
@@ -60,9 +65,8 @@ t_philo	*ft_node(t_data	*dt, int name)
 	n = ft_calloc(sizeof(t_philo), 1);
 	if (!n)
 		return (NULL);
-	pthread_mutex_init(&n->mutex, NULL);
-	n->fork = 0;				//false
-	n->n_eated = 0;				// puede que con calloc se llenen solos
+	pthread_mutex_init(&n->fork, NULL);
+	n->n_eated = 0;
 	n->name_ph = name;
 	n->data = dt;
 	n->next = NULL;
@@ -76,7 +80,7 @@ t_philo	*ft_lst(t_data	*dt)
 	t_philo	*nd;
 	int		i;
 
-	i = dt->num_philo + 1;
+	i = (dt->num_philo + 1);
 	while(--i)
 	{
 		nd = ft_node(dt, i);
@@ -89,30 +93,10 @@ t_philo	*ft_lst(t_data	*dt)
 			aux = head;
 			while (aux->next)
 				aux = aux->next;
-			if (i == 1)				//ultimo nodo
+			if (i == 1)			//ultimo nodo
 				nd->next = head;
 			aux->next = nd;
 		}
 	}
-	return (head);	
+	return (head);
 }
-
-/* 	aux = head;
-	i = ft_atoi(argv[1]) + 1;
-	while(--i)
-	{
-		printf("este es el nombre del nodo %d\n", aux->name_ph);
-		aux = aux->next;
-	}
-
-	aux = head;
-	i = 5;
-	while(--i)
-	{
-		printf("este es el numero antes %d\n", (*(aux->data)).t_sleep);
-		(*(aux->data)).t_sleep++;
-		printf("este es el numero despues %d\n", (*(aux->data)).t_sleep);
-		aux = aux->next;
-		printf("este es el numero del sig %d\n", (*(aux->data)).t_sleep);
-	}
-*/

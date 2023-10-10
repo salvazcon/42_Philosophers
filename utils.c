@@ -6,11 +6,21 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:23:18 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/02 20:04:33 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/10 17:56:47 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_strlen(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
 
 int	ft_isdigit(int c)
 {
