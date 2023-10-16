@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:21:32 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/16 17:27:36 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/16 18:22:10 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,14 @@ typedef struct s_philo
 int				ft_isdigit(int c);
 int				ft_atoi(char *str);
 int				ft_strlen(const char *s);
-void			*ft_calloc(size_t count, size_t size);
+int				ft_is_dead(t_philo	*ph);
 int				ft_check_args(int argc, char **argv);
-unsigned long	in_time(void);
+void			ft_usleep(unsigned long time);
+void			ft_free_round_list(t_philo	*ph);
+void			*ft_calloc(size_t count, size_t size);
+void			ft_print(t_philo	*ph, unsigned long time, char *msg);
+unsigned long	ft_time(void);
 t_data			ft_data(int argc, char **argv);
 t_philo			*ft_lst(t_data	*dt);
 t_philo			*ft_node(t_data	*dt, int name);
-//TEMP
-void			print(t_philo	*ph, unsigned long time, char *msg);
-int				ft_is_dead(t_philo	*ph);
-unsigned long	in_time(void);
-
 #endif

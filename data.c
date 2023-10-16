@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/16 17:30:06 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/16 18:23:03 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_data	ft_data(int argc, char **argv)
 	else
 		dt.must_eat = -1;
 	pthread_mutex_init(&dt.mutex, NULL);
-	dt.time = in_time();
+	dt.time = ft_time();
 	dt.stuffed = 0;
 	dt.dead = 0;
 	return (dt);
