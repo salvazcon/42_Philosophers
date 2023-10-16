@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/10 19:28:53 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/16 17:30:06 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_check_args(int argc, char **argv)
 	return (0);
 }
 
-t_data	ft_data(int argc, char **argv) //tengo que mejorar el control de errores
+t_data	ft_data(int argc, char **argv)
 {
 	t_data	dt;
 
@@ -43,24 +43,25 @@ t_data	ft_data(int argc, char **argv) //tengo que mejorar el control de errores
 	dt.t_eat = ft_atoi(argv[3]);
 	dt.t_sleep = ft_atoi(argv[4]);
 	if (dt.num_philo <= 0 || dt.t_die <= 0 || dt.t_eat <= 0 || dt.t_sleep <= 0)
-		exit(1);	//ft_free
+		exit(1);	//ft_free??
 	if (argc == 6)
 	{
 		dt.must_eat = ft_atoi(argv[5]);
-		if(dt.must_eat <= 0)
-			exit(1);	//ft_free
+		if (dt.must_eat <= 0)
+			exit(1);	//ft_free??
 	}
 	else
-		dt.must_eat = -1;	//no existe el argv
+		dt.must_eat = -1;
 	pthread_mutex_init(&dt.mutex, NULL);
-	dt.smell_dead = 0;		//false o true
 	dt.time = in_time();
-	return	(dt);
+	dt.stuffed = 0;
+	dt.dead = 0;
+	return (dt);
 }
 
 t_philo	*ft_node(t_data	*dt, int name)
 {
-	t_philo *n;
+	t_philo	*n;
 
 	n = ft_calloc(sizeof(t_philo), 1);
 	if (!n)
@@ -81,19 +82,19 @@ t_philo	*ft_lst(t_data	*dt)
 	int		i;
 
 	i = (dt->num_philo + 1);
-	while(--i)
+	while (--i)
 	{
 		nd = ft_node(dt, i);
-		if(!nd)
+		if (!nd)
 			return (NULL);
-		if(i == dt->num_philo)	//primer nodo
+		if (i == dt->num_philo)
 			head = nd;
 		else
 		{
 			aux = head;
 			while (aux->next)
 				aux = aux->next;
-			if (i == 1)			//ultimo nodo
+			if (i == 1)
 				nd->next = head;
 			aux->next = nd;
 		}

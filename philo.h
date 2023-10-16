@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:21:32 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/10 19:27:45 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/16 17:27:36 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,14 @@
 typedef struct s_data
 {
 	pthread_mutex_t		mutex;
-	bool				smell_dead;	//debo mutearlo pero sin que sea la variable le mutex
 	int					num_philo;
 	int					t_die;
 	int					t_eat;
 	int					t_sleep;
 	int					must_eat;
+	int					stuffed;
 	unsigned long		time;
+	bool				dead;
 }	t_data;
 
 typedef struct s_philo
@@ -50,8 +51,8 @@ typedef struct s_philo
 	unsigned long		t_life;
 	int					n_eated;
 	int					name_ph;
-	struct	s_data		*data;
-	struct	s_philo		*next;
+	struct s_data		*data;
+	struct s_philo		*next;
 }	t_philo;
 
 int				ft_isdigit(int c);
@@ -63,5 +64,9 @@ unsigned long	in_time(void);
 t_data			ft_data(int argc, char **argv);
 t_philo			*ft_lst(t_data	*dt);
 t_philo			*ft_node(t_data	*dt, int name);
+//TEMP
+void			print(t_philo	*ph, unsigned long time, char *msg);
+int				ft_is_dead(t_philo	*ph);
+unsigned long	in_time(void);
 
 #endif
