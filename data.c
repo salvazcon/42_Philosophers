@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/16 18:23:03 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/17 21:43:18 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_check_args(int argc, char **argv)
 	int	i;
 	int	j;
 
-	if (argc < 4 || argc > 6)
+	if (argc < 5 || argc > 6)
 		return (1);
 	i = 1;
 	while (argv[i])

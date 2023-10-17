@@ -6,25 +6,17 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/16 18:22:33 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/17 22:57:08 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_is_dead(t_philo	*ph)
+void	ft_stuffed(t_philo	*ph)
 {
 	pthread_mutex_lock(&ph->data->mutex);
-	if (ft_time() - ph->t_life > (unsigned long)ph->data->t_die && \
-	!ph->data->dead)
-	{
-		printf("%lums %d a muerto.\n", ft_time() - ph->data->time, ph->name_ph);
-		(*(ph->data)).dead = 1;
-	}
+	(*(ph->data)).stuffed++;
 	pthread_mutex_unlock(&ph->data->mutex);
-	if ((ph->data->dead) || (ph->data->stuffed == ph->data->num_philo))
-		return (1);
-	return (0);
 }
 
 unsigned long	ft_time(void)
@@ -41,21 +33,22 @@ unsigned long	ft_time(void)
 	return (tl);
 }
 
-void	ft_usleep(unsigned long time)
+void	ft_usleep(t_philo	*ph, unsigned long time)
 {
 	unsigned long	start;
 
 	start = ft_time() + time;
 	while (ft_time() < start)
 		usleep(100);
+	ft_is_dead(ph);
 }
 
 void	ft_print(t_philo	*ph, unsigned long time, char *msg)
 {
-	if (ft_is_dead(ph))
-		return ;
+	ft_is_dead(ph);		//creo que esta linea no es necesaria y se optimiza todo mucho
 	pthread_mutex_lock(&ph->data->mutex);
-	printf("%lums  %d %s\n", time, ph->name_ph, msg);
+	if ((ph->data->dead) == 0 && (ph->data->stuffed < ph->data->num_philo))
+		printf("%lums  %d %s\n", time, ph->name_ph, msg);
 	pthread_mutex_unlock(&ph->data->mutex);
 }
 
