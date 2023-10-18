@@ -6,39 +6,30 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:22:46 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/17 22:55:38 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/18 18:39:35 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_is_dead(t_philo	*ph)
-{
-	pthread_mutex_lock(&ph->data->mutex);
-	if (ft_time() - ph->t_life >= (unsigned long)ph->data->t_die && \
-	!ph->data->dead)
-	{
-		printf("%lums  %d a muerto\n", ft_time() - ph->data->time, ph->name_ph);
-		(*(ph->data)).dead = 1;
-	}
-	pthread_mutex_unlock(&ph->data->mutex);
-	if ((ph->data->dead) || (ph->data->stuffed >= ph->data->num_philo))
-		return (1);
-	return (0);
-}
-
-void	*ft_unique_philo(void *arg)
+void	*ft_dead_philo(void	*arg)	 //posible error aqui, mueren antes de empezar. El time
 {
 	t_philo			*ph;
 
 	ph = ((t_philo *)arg);
 	if (!ph)
 		return (NULL);
-	pthread_mutex_lock(&ph->fork);
-	printf("%lums  %d has taken a fork\n", ft_time() - ph->data->time, \
-	ph->name_ph);
-	printf("%dms  %d died\n", ph->data->t_die, ph->name_ph);
-	pthread_mutex_unlock(&ph->fork);
+	while ((!ph->data->dead) && (ph->data->stuffed < ph->data->num_philo))
+	{
+		if (ft_time() - ph->t_life >= (unsigned long)ph->data->t_die)
+		{
+			ft_print(ph, ft_time() - ph->data->time, "died");
+			(*(ph->data)).dead = 1;
+			if (ph->data->num_philo == 1)
+				pthread_mutex_unlock(&ph->fork);
+		}
+		ph = ph->next;
+	}
 	return (NULL);
 }
 
@@ -49,23 +40,23 @@ void	*ft_philo(void *arg)
 	ph = ((t_philo *)arg);
 	if (!ph)
 		return (NULL);
+	if ((ph->name_ph % 2) == 0)
+		ft_usleep(ph->data->t_eat);
 	ph->t_life = ft_time();
-	while (!ft_is_dead(ph))
+	while ((!ph->data->dead) && (ph->data->stuffed < ph->data->num_philo))
 	{
 		pthread_mutex_lock(&ph->fork);
 		ft_print(ph, ft_time() - ph->data->time, "has taken a fork");
 		pthread_mutex_lock(&ph->next->fork);
 		ft_print(ph, ft_time() - ph->data->time, "has taken a fork");
 		ft_print(ph, ft_time() - ph->data->time, "is eating");
-		ft_usleep(ph, ph->data->t_eat);
+		ft_usleep(ph->data->t_eat);
 		ph->t_life = ft_time();
-		ph->n_eated++;
-		if (ph->n_eated == ph->data->must_eat)
-			ft_stuffed(ph);
+		ft_stuffed(ph);
 		pthread_mutex_unlock(&ph->fork);
 		pthread_mutex_unlock(&ph->next->fork);
 		ft_print(ph, ft_time() - ph->data->time, "is sleeping");
-		ft_usleep(ph, ph->data->t_sleep);
+		ft_usleep(ph->data->t_sleep);
 		ft_print(ph, ft_time() - ph->data->time, "is thinking");
 	}
 	return (NULL);
@@ -76,24 +67,20 @@ void	ft_init_philo(t_philo	*ph)
 	pthread_t	*tid;
 	int			i;
 
-	tid = ft_calloc(sizeof(pthread_t), ph->data->num_philo);
+	tid = ft_calloc(sizeof(pthread_t), ph->data->num_philo + 1);
 	if (!tid)
 		return ;
 	i = -1;
-	if (1 == ph->data->num_philo)
-		if (pthread_create(&tid[++i], NULL, ft_unique_philo, ph) != 0)
-			free(tid);
 	while (++i < ph->data->num_philo)
 	{
-		if ((ph->name_ph % 2) == 0)
-			usleep(200);
-		if (1 < ph->data->num_philo)
-			if (pthread_create(&tid[i], NULL, ft_philo, ph) != 0)
-				break ;
+		if (pthread_create(&tid[i], NULL, ft_philo, ph) != 0)
+			break ;
 		ph = ph->next;
 	}
-	while (--i >= 0)
-		pthread_join(tid[i], NULL);
+	if (pthread_create(&tid[i], NULL, ft_dead_philo, ph) != 0)
+		(*(ph->data)).dead = 1;
+	while (i >= 0)
+		pthread_join(tid[i--], NULL);
 	free(tid);
 }
 
@@ -101,7 +88,7 @@ int	main(int argc, char **argv)
 {
 	t_philo	*ph;
 	t_data	dt;
-	//atexit(ft_leaks);	//leaks
+	
 	if (ft_check_args(argc, argv))
 		return (1);
 	dt = ft_data(argc, argv);	//control de errores
@@ -118,6 +105,7 @@ int	main(int argc, char **argv)
 }
 
 /* void	ft_leaks(void)
+	//atexit(ft_leaks);	//leaks
 {
 	system("leaks -q philo");
 } */

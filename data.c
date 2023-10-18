@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/17 21:43:18 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/18 14:59:39 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,30 +74,29 @@ t_philo	*ft_node(t_data	*dt, int name)
 	return (n);
 }
 
-t_philo	*ft_lst(t_data	*dt)
+t_philo			*ft_lst(t_data	*dt)
 {
-	t_philo	*head;
+	t_philo	*last;
 	t_philo	*aux;
 	t_philo	*nd;
 	int		i;
-
+	
 	i = (dt->num_philo + 1);
+	last = NULL;
 	while (--i)
 	{
 		nd = ft_node(dt, i);
 		if (!nd)
 			return (NULL);
-		if (i == dt->num_philo)
-			head = nd;
-		else
+		nd->next = last;
+		last = nd;
+		if(i == 1)
 		{
-			aux = head;
+			aux = last;
 			while (aux->next)
 				aux = aux->next;
-			if (i == 1)
-				nd->next = head;
 			aux->next = nd;
 		}
 	}
-	return (head);
+	return (last);
 }

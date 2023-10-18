@@ -6,18 +6,11 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/17 22:57:08 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/18 18:18:41 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	ft_stuffed(t_philo	*ph)
-{
-	pthread_mutex_lock(&ph->data->mutex);
-	(*(ph->data)).stuffed++;
-	pthread_mutex_unlock(&ph->data->mutex);
-}
 
 unsigned long	ft_time(void)
 {
@@ -33,23 +26,32 @@ unsigned long	ft_time(void)
 	return (tl);
 }
 
-void	ft_usleep(t_philo	*ph, unsigned long time)
+void	ft_usleep(unsigned long time)
 {
 	unsigned long	start;
 
 	start = ft_time() + time;
 	while (ft_time() < start)
 		usleep(100);
-	ft_is_dead(ph);
 }
 
 void	ft_print(t_philo	*ph, unsigned long time, char *msg)
 {
-	ft_is_dead(ph);		//creo que esta linea no es necesaria y se optimiza todo mucho
 	pthread_mutex_lock(&ph->data->mutex);
-	if ((ph->data->dead) == 0 && (ph->data->stuffed < ph->data->num_philo))
+	if ((!ph->data->dead) && (ph->data->stuffed < ph->data->num_philo))
 		printf("%lums  %d %s\n", time, ph->name_ph, msg);
 	pthread_mutex_unlock(&ph->data->mutex);
+}
+
+void	ft_stuffed(t_philo	*ph)
+{
+	ph->n_eated++;
+	if (ph->n_eated == ph->data->must_eat)
+	{
+		pthread_mutex_lock(&ph->data->mutex);
+		(*(ph->data)).stuffed++;
+		pthread_mutex_unlock(&ph->data->mutex);
+	}
 }
 
 void	ft_free_round_list(t_philo	*ph)
