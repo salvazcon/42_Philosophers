@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/18 18:18:41 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/26 14:58:30 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,11 @@ void	ft_usleep(unsigned long time)
 		usleep(100);
 }
 
-void	ft_print(t_philo	*ph, unsigned long time, char *msg)
+void	ft_destroy_mutex(t_philo	*ph)
 {
-	pthread_mutex_lock(&ph->data->mutex);
-	if ((!ph->data->dead) && (ph->data->stuffed < ph->data->num_philo))
-		printf("%lums  %d %s\n", time, ph->name_ph, msg);
-	pthread_mutex_unlock(&ph->data->mutex);
-}
-
-void	ft_stuffed(t_philo	*ph)
-{
-	ph->n_eated++;
-	if (ph->n_eated == ph->data->must_eat)
-	{
-		pthread_mutex_lock(&ph->data->mutex);
-		(*(ph->data)).stuffed++;
-		pthread_mutex_unlock(&ph->data->mutex);
-	}
+	pthread_mutex_destroy(&ph->data->mutex_print);
+	pthread_mutex_destroy(&ph->data->mutex_dead);
+	pthread_mutex_destroy(&ph->data->mutex_life);
 }
 
 void	ft_free_round_list(t_philo	*ph)
@@ -59,6 +47,7 @@ void	ft_free_round_list(t_philo	*ph)
 	t_philo	*aux;
 	t_philo	*top;
 
+	ft_destroy_mutex(ph);
 	top = ph->next;
 	ph->next = NULL;
 	while (top)
