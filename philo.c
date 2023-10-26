@@ -6,13 +6,13 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:22:46 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 15:29:10 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/26 16:47:06 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void ft_dead_philo(t_philo *ph)
+void	ft_dead_philo(t_philo *ph)
 {
 	while (!ft_is_dead(ph))
 	{
@@ -31,16 +31,16 @@ void ft_dead_philo(t_philo *ph)
 	}
 }
 
-void *ft_philo(void *arg)
+void	*ft_philo(void *arg)
 {
-	t_philo *ph;
+	t_philo	*ph;
 
 	ph = ((t_philo *)arg);
 	if (!ph)
 		return (NULL);
 	if ((ph->name_ph % 2) == 0)
 		ft_usleep(ph->data->t_eat);
-	ft_life(ph);;
+	ft_life(ph);
 	while (!ft_is_dead(ph))
 	{
 		pthread_mutex_lock(&ph->fork);
@@ -60,20 +60,20 @@ void *ft_philo(void *arg)
 	return (NULL);
 }
 
-void ft_init_philo(t_philo *ph)
+void	ft_init_philo(t_philo *ph)
 {
 	int			i;
 	pthread_t	*tid;
 
 	tid = ft_calloc(sizeof(pthread_t), ph->data->num_philo + 1);
 	if (!tid)
-		return;
+		return ;
 	i = -1;
 	while (++i < ph->data->num_philo)
 	{
 		if (pthread_create(&tid[i], NULL, ft_philo, ph) != 0)
-			break;
-		if	(ph->data->num_philo == 1)
+			break ;
+		if (ph->data->num_philo == 1)
 			pthread_detach(tid[i]);
 		ph = ph->next;
 	}
@@ -88,10 +88,10 @@ void ft_init_philo(t_philo *ph)
 	system("leaks -q philo");
 } */
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_philo *ph;
-	t_data dt;
+	t_philo	*ph;
+	t_data	dt;
 
 	//atexit(ft_leaks);	//leaks
 	if (ft_check_args(argc, argv))
