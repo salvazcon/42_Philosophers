@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 16:46:12 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:49:19 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_data	ft_data(int argc, char **argv)
 	dt.dead = 0;
 	pthread_mutex_init(&dt.mutex_print, NULL);
 	pthread_mutex_init(&dt.mutex_dead, NULL);
-	pthread_mutex_init(&dt.mutex_life, NULL);
 	return (dt);
 }
 
@@ -69,6 +68,7 @@ t_philo	*ft_node(t_data	*dt, int name)
 	n = ft_calloc(sizeof(t_philo), 1);
 	if (!n)
 		return (NULL);
+	pthread_mutex_init(&n->mutex_life, NULL);
 	pthread_mutex_init(&n->fork, NULL);
 	n->t_life = ft_time();
 	n->n_eated = 0;

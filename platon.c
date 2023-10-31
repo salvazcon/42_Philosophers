@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:57:26 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 16:48:38 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:10:46 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_print(t_philo	*ph, unsigned long time, char *msg)
 
 void	ft_life(t_philo	*ph)
 {
-	pthread_mutex_lock(&ph->data->mutex_life);
+	pthread_mutex_lock(&ph->mutex_life);
 	ph->t_life = ft_time();
-	pthread_mutex_unlock(&ph->data->mutex_life);
+	pthread_mutex_unlock(&ph->mutex_life);
 }

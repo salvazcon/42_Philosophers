@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:21:32 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 16:48:03 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:49:30 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,13 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <dirent.h>
-# include <sys/time.h> //libreria hora/ms
-# include <pthread.h> //libreria hilos
+# include <sys/time.h>
+# include <pthread.h>
 
 typedef struct s_data
 {
 	pthread_mutex_t		mutex_print;
 	pthread_mutex_t		mutex_dead;
-	pthread_mutex_t		mutex_life;
 	int					num_philo;
 	int					t_die;
 	int					t_eat;
@@ -50,6 +49,7 @@ typedef struct s_data
 
 typedef struct s_philo
 {
+	pthread_mutex_t		mutex_life;
 	pthread_mutex_t		fork;
 	unsigned long		t_life;
 	int					n_eated;
@@ -66,11 +66,11 @@ int				ft_strlen(const char *s);
 int				ft_check_args(int argc, char **argv);
 void			ft_life(t_philo *ph);
 void			ft_dead_philo(t_philo *ph);
-void			ft_usleep(unsigned long time);
 void			ft_destroy_mutex(t_philo *ph);
 void			ft_free_round_list(t_philo *ph);
-void			*ft_calloc(size_t count, size_t size);
 void			ft_stuffed(t_philo *ph, int n_philo);
+void			*ft_calloc(size_t count, size_t size);
+void			ft_usleep(t_philo *ph, unsigned long time);
 void			ft_print(t_philo *ph, unsigned long time, char *msg);
 t_data			ft_data(int argc, char **argv);
 t_philo			*ft_lst(t_data *dt);

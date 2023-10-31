@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 14:58:30 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:23:28 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ unsigned long	ft_time(void)
 	return (tl);
 }
 
-void	ft_usleep(unsigned long time)
+void	ft_usleep(t_philo	*ph, unsigned long time)
 {
 	unsigned long	start;
 
+	if (ft_is_dead(ph))
+		return ;
 	start = ft_time() + time;
 	while (ft_time() < start)
 		usleep(100);
@@ -39,7 +41,6 @@ void	ft_destroy_mutex(t_philo	*ph)
 {
 	pthread_mutex_destroy(&ph->data->mutex_print);
 	pthread_mutex_destroy(&ph->data->mutex_dead);
-	pthread_mutex_destroy(&ph->data->mutex_life);
 }
 
 void	ft_free_round_list(t_philo	*ph)
@@ -52,6 +53,7 @@ void	ft_free_round_list(t_philo	*ph)
 	ph->next = NULL;
 	while (top)
 	{
+		pthread_mutex_destroy(&ph->mutex_life);
 		pthread_mutex_destroy(&ph->fork);
 		aux = top;
 		top = top->next;

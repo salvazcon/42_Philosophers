@@ -6,7 +6,7 @@
 /*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:22:46 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/26 16:47:06 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/10/31 15:29:52 by saazcon-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,19 @@ void	ft_dead_philo(t_philo *ph)
 {
 	while (!ft_is_dead(ph))
 	{
-		pthread_mutex_lock(&ph->data->mutex_life);
+		pthread_mutex_lock(&ph->mutex_life);
 		if (ft_time() - ph->t_life >= (unsigned long)ph->data->t_die)
 		{
-			pthread_mutex_unlock(&ph->data->mutex_life);
+			pthread_mutex_unlock(&ph->mutex_life);
 			ft_print(ph, ft_time() - ph->data->time, "died");
 			pthread_mutex_lock(&ph->data->mutex_dead);
 			(*(ph->data)).dead = 1;
 			pthread_mutex_unlock(&ph->data->mutex_dead);
+			if (ph->data->num_philo == 1)
+				pthread_mutex_unlock(&ph->fork);
 		}
 		else
-			pthread_mutex_unlock(&ph->data->mutex_life);
+			pthread_mutex_unlock(&ph->mutex_life);
 		ph = ph->next;
 	}
 }
@@ -39,7 +41,7 @@ void	*ft_philo(void *arg)
 	if (!ph)
 		return (NULL);
 	if ((ph->name_ph % 2) == 0)
-		ft_usleep(ph->data->t_eat);
+		ft_usleep(ph, ph->data->t_eat);
 	ft_life(ph);
 	while (!ft_is_dead(ph))
 	{
@@ -48,13 +50,13 @@ void	*ft_philo(void *arg)
 		pthread_mutex_lock(&ph->next->fork);
 		ft_print(ph, ft_time() - ph->data->time, "has taken a fork");
 		ft_print(ph, ft_time() - ph->data->time, "is eating");
-		ft_usleep(ph->data->t_eat);
+		ft_usleep(ph, ph->data->t_eat);
 		ft_life(ph);
 		pthread_mutex_unlock(&ph->fork);
 		pthread_mutex_unlock(&ph->next->fork);
 		ft_stuffed(ph, ph->data->num_philo);
 		ft_print(ph, ft_time() - ph->data->time, "is sleeping");
-		ft_usleep(ph->data->t_sleep);
+		ft_usleep(ph, ph->data->t_sleep);
 		ft_print(ph, ft_time() - ph->data->time, "is thinking");
 	}
 	return (NULL);
@@ -73,27 +75,19 @@ void	ft_init_philo(t_philo *ph)
 	{
 		if (pthread_create(&tid[i], NULL, ft_philo, ph) != 0)
 			break ;
-		if (ph->data->num_philo == 1)
-			pthread_detach(tid[i]);
 		ph = ph->next;
 	}
 	ft_dead_philo(ph);
-	while (--i >= 0 && ph->data->num_philo != 1)
+	while (--i >= 0)
 		pthread_join(tid[i], NULL);
 	free(tid);
 }
-
-/* void	ft_leaks(void)
-{
-	system("leaks -q philo");
-} */
 
 int	main(int argc, char **argv)
 {
 	t_philo	*ph;
 	t_data	dt;
 
-	//atexit(ft_leaks);	//leaks
 	if (ft_check_args(argc, argv))
 		return (1);
 	dt = ft_data(argc, argv);
