@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:21:32 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/11/03 16:03:43 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/03 17:21:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_data
 {
 	pthread_mutex_t		mutex_print;
 	pthread_mutex_t		mutex_stuff;
+	pthread_mutex_t		mutex_erase;
 	pthread_mutex_t		mutex_dead;
 	pthread_mutex_t		mutex_end;
 	int					num_philo;
@@ -43,6 +44,7 @@ typedef struct s_data
 	int					must_eat;
 	int					stuffed;
 	unsigned long		time;
+	bool				erase;
 	bool				dead;
 	bool				end;
 	bool				error;

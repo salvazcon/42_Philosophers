@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:22:46 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/11/03 16:07:06 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/03 18:00:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_dead_philo(t_philo *ph)
 {
 	pthread_mutex_lock(&ph->data->mutex_end);
-	while ((*(ph->data)).dead != 1)
+	while ((*(ph->data)).end != 1)
 	{
 		pthread_mutex_unlock(&ph->data->mutex_end);
 		pthread_mutex_lock(&ph->mutex_life);

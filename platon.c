@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/26 14:57:26 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/11/03 15:59:50 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/03 17:31:03 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,10 @@ void	ft_stuffed(t_philo *ph, int n_philo)
 void	ft_print(t_philo	*ph, unsigned long time, char *msg)
 {
 	pthread_mutex_lock(&ph->data->mutex_print);
-	if (!ft_is_dead(ph))
+	pthread_mutex_lock(&ph->data->mutex_erase);
+	if (!ph->data->erase)
 		printf("%lums  %d %s\n", time, ph->name_ph, msg);
+	pthread_mutex_unlock(&ph->data->mutex_erase);
 	pthread_mutex_unlock(&ph->data->mutex_print);
 }
 
@@ -63,4 +65,7 @@ void	ft_kill(t_philo	*ph)
 	pthread_mutex_lock(&ph->data->mutex_end);
 	(*(ph->data)).end = 1;
 	pthread_mutex_unlock(&ph->data->mutex_end);
+	pthread_mutex_lock(&ph->data->mutex_erase);
+	(*(ph->data)).erase = 1;
+	pthread_mutex_unlock(&ph->data->mutex_erase);
 }

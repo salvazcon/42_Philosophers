@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/28 20:18:09 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/11/03 14:57:56 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/03 17:28:42 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	ft_init_mutex(t_data	*dt)
 {
 	pthread_mutex_init(&dt->mutex_print, NULL);
 	pthread_mutex_init(&dt->mutex_stuff, NULL);
+	pthread_mutex_init(&dt->mutex_erase, NULL);
 	pthread_mutex_init(&dt->mutex_dead, NULL);
 	pthread_mutex_init(&dt->mutex_end, NULL);
 }
@@ -64,6 +65,7 @@ t_data	ft_data(int argc, char **argv)
 	}
 	dt.time = ft_time();
 	dt.stuffed = 0;
+	dt.erase = 0;
 	dt.dead = 0;
 	dt.end = 0;
 	ft_init_mutex(&dt);

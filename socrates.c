@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/11/03 15:59:06 by marvin           ###   ########.fr       */
+/*   Updated: 2023/11/03 17:31:56 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_destroy_mutex(t_philo	*ph)
 	pthread_mutex_destroy(&ph->data->mutex_dead);
 	pthread_mutex_destroy(&ph->data->mutex_stuff);
 	pthread_mutex_destroy(&ph->data->mutex_end);
+	pthread_mutex_destroy(&ph->data->mutex_erase);
 }
 
 void	ft_free_round_list(t_philo	*ph)
