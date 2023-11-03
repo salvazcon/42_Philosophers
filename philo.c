@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:22:46 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/31 15:29:52 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/11/03 16:07:06 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,25 @@
 
 void	ft_dead_philo(t_philo *ph)
 {
-	while (!ft_is_dead(ph))
+	pthread_mutex_lock(&ph->data->mutex_end);
+	while ((*(ph->data)).dead != 1)
 	{
+		pthread_mutex_unlock(&ph->data->mutex_end);
 		pthread_mutex_lock(&ph->mutex_life);
 		if (ft_time() - ph->t_life >= (unsigned long)ph->data->t_die)
 		{
 			pthread_mutex_unlock(&ph->mutex_life);
 			ft_print(ph, ft_time() - ph->data->time, "died");
-			pthread_mutex_lock(&ph->data->mutex_dead);
-			(*(ph->data)).dead = 1;
-			pthread_mutex_unlock(&ph->data->mutex_dead);
+			ft_kill(ph);
 			if (ph->data->num_philo == 1)
 				pthread_mutex_unlock(&ph->fork);
 		}
 		else
 			pthread_mutex_unlock(&ph->mutex_life);
 		ph = ph->next;
+		pthread_mutex_lock(&ph->data->mutex_end);
 	}
+	pthread_mutex_unlock(&ph->data->mutex_end);
 }
 
 void	*ft_philo(void *arg)
@@ -41,7 +43,7 @@ void	*ft_philo(void *arg)
 	if (!ph)
 		return (NULL);
 	if ((ph->name_ph % 2) == 0)
-		ft_usleep(ph, ph->data->t_eat);
+		ft_usleep(ph, 10);
 	ft_life(ph);
 	while (!ft_is_dead(ph))
 	{
@@ -74,7 +76,10 @@ void	ft_init_philo(t_philo *ph)
 	while (++i < ph->data->num_philo)
 	{
 		if (pthread_create(&tid[i], NULL, ft_philo, ph) != 0)
+		{
+			ft_kill(ph);
 			break ;
+		}
 		ph = ph->next;
 	}
 	ft_dead_philo(ph);

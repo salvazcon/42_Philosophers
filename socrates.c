@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   socrates.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:40:01 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/31 15:23:28 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:59:06 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	ft_destroy_mutex(t_philo	*ph)
 {
 	pthread_mutex_destroy(&ph->data->mutex_print);
 	pthread_mutex_destroy(&ph->data->mutex_dead);
+	pthread_mutex_destroy(&ph->data->mutex_stuff);
+	pthread_mutex_destroy(&ph->data->mutex_end);
 }
 
 void	ft_free_round_list(t_philo	*ph)

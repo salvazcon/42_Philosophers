@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saazcon- <saazcon-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 13:21:32 by saazcon-          #+#    #+#             */
-/*   Updated: 2023/10/31 14:49:30 by saazcon-         ###   ########.fr       */
+/*   Updated: 2023/11/03 16:03:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@
 # include <sys/stat.h>
 # include <sys/ioctl.h>
 # include <stdio.h>
-# include <readline/readline.h>
-# include <readline/history.h>
 # include <signal.h>
 # include <errno.h>
 # include <string.h>
@@ -35,7 +33,9 @@
 typedef struct s_data
 {
 	pthread_mutex_t		mutex_print;
+	pthread_mutex_t		mutex_stuff;
 	pthread_mutex_t		mutex_dead;
+	pthread_mutex_t		mutex_end;
 	int					num_philo;
 	int					t_die;
 	int					t_eat;
@@ -44,6 +44,7 @@ typedef struct s_data
 	int					stuffed;
 	unsigned long		time;
 	bool				dead;
+	bool				end;
 	bool				error;
 }	t_data;
 
@@ -65,6 +66,7 @@ int				ft_is_dead(t_philo *ph);
 int				ft_strlen(const char *s);
 int				ft_check_args(int argc, char **argv);
 void			ft_life(t_philo *ph);
+void			ft_kill(t_philo	*ph);
 void			ft_dead_philo(t_philo *ph);
 void			ft_destroy_mutex(t_philo *ph);
 void			ft_free_round_list(t_philo *ph);
